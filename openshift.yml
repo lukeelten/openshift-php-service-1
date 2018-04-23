@@ -2,7 +2,7 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "openshift-php-service-1",
+    "name": "articles-service",
     "annotations": {
       "openshift.io/display-name": "Articles Service",
       "description": "An example service to deliver articles as JSON.",
@@ -76,7 +76,7 @@
             "uri": "${SOURCE_REPOSITORY_URL}",
             "ref": "${SOURCE_REPOSITORY_REF}"
           },
-          "contextDir": "${CONTEXT_DIR}"
+          "contextDir": ""
         },
         "strategy": {
           "type": "Source",
@@ -109,7 +109,7 @@
           }
         ],
         "postCommit": {
-          "script": "composer test"
+          "script": "vendor/bin/phpunit"
         }
       }
     },
@@ -133,7 +133,7 @@
             "imageChangeParams": {
               "automatic": true,
               "containerNames": [
-                "cakephp-example"
+                "articles-service"
               ],
               "from": {
                 "kind": "ImageStreamTag",
@@ -186,8 +186,8 @@
                 },
                 "env": [
                   {
-                    "name": "DB_HOST",
-                    "value": "172.30.251.102"
+                    "name": "DB_SERVICE_NAME",
+                    "value": "${DB_NAMESPACE}"
                   },
                   {
                     "name": "DB_USER",
@@ -273,11 +273,6 @@
       "name": "SOURCE_REPOSITORY_REF",
       "displayName": "Git Reference",
       "description": "Set this to a branch name, tag or other ref of your repository if you are not using the default branch."
-    },
-    {
-      "name": "CONTEXT_DIR",
-      "displayName": "Context Directory",
-      "description": "Set this to the relative path to your project if it is not in the root of your repository."
     },
     {
       "name": "APPLICATION_DOMAIN",

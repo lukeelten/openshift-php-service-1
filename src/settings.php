@@ -1,4 +1,8 @@
 <?php
+
+$mysqlService = getenv("DB_SERVICE_NAME");
+$hostenv = strtoupper($mysqlService) . "_SERVICE_HOST";
+
 return [
     'settings' => [
         'prettyPrint' => true,
@@ -15,7 +19,7 @@ return [
         ],
 
         'db' => [
-            'host' => getenv('DB_HOST') ?? '127.0.0.1',
+            'host' => getenv($hostenv) ?? '127.0.0.1',
             'user' => getenv('DB_USER') ?? '',
             'password' => getenv('DB_PASSWORD') ?? '',
             'db' => getenv('DB_NAME') ?? ''

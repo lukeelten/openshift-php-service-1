@@ -19,6 +19,7 @@ $app->get('/articles', function (Request $request, Response $response, array $ar
 });
 
 $app->get('/articles/{id}', function (Request $request, Response $response, array $args) {
+    $id = filter_var($args["id"], FILTER_SANITIZE_NUMBER_INT);
 
     /**
      * @var PDO $db
@@ -27,7 +28,7 @@ $app->get('/articles/{id}', function (Request $request, Response $response, arra
 
     $stmt = $db->prepare("SELECT * FROM articles WHERE id = :id");
     $stmt->execute([
-        ":id" => $args["name"]
+        ":id" => $id
     ]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 

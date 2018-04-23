@@ -3,10 +3,17 @@
 
 $container = $app->getContainer();
 
-// view renderer
-$container['renderer'] = function ($c) {
-    $settings = $c->get('settings')['renderer'];
-    return new Slim\Views\PhpRenderer($settings['template_path']);
+
+$container['db'] = function ($c) {
+    $settings = $c->get('settings')['db'];
+
+
+    $dsn = "mysql:host=" . $settings['host'] . ";dbname=" . $settings['db'];
+    $pdo = new PDO($dsn, $settings['user'], $settings['password'], [
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
+    ]);
+
+    return $pdo;
 };
 
 // monolog

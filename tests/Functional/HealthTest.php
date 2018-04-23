@@ -2,7 +2,7 @@
 
 namespace Tests\Functional;
 
-class HomepageTest extends BaseTestCase
+class HealthTest extends BaseTestCase
 {
     /**
      * Test that the index route returns a rendered response containing the text 'SlimFramework' but not a greeting
@@ -12,19 +12,15 @@ class HomepageTest extends BaseTestCase
         $response = $this->runApp('GET', '/');
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('SlimFramework', (string)$response->getBody());
-        $this->assertNotContains('Hello', (string)$response->getBody());
-    }
+        $this->assertContains("application/json", $response->getHeaderLine("Content-Type"));
 
-    /**
-     * Test that the index route with optional name argument returns a rendered greeting
-     */
-    public function testGetHomepageWithGreeting()
-    {
-        $response = $this->runApp('GET', '/name');
+        $data = (string)$response->getBody();
+        $this->assertTrue(substr($data, 0, 1) == "{");
+        $this->assertTrue(substr($data, -1, 1) == "}");
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('Hello name!', (string)$response->getBody());
+        $json =json_decode($data, true);
+
+        $this->assertEquals(true, $json["healthy"]);
     }
 
     /**

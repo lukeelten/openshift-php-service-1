@@ -18,6 +18,22 @@ $app->get('/articles', function (Request $request, Response $response, array $ar
     return $response->withJson($result, 200, JSON_PRETTY_PRINT);
 });
 
+$app->get('/articles/{id}', function (Request $request, Response $response, array $args) {
+
+    /**
+     * @var PDO $db
+     */
+    $db = $this->db;
+
+    $stmt = $db->prepare("SELECT * FROM articles WHERE id = :id");
+    $stmt->execute([
+        ":id" => $args["name"]
+    ]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+});
+
 
 $app->get('/', function (Request $request, Response $response, array $args) {
     return $response->withJson(["healthy" => true], 200, JSON_PRETTY_PRINT);
